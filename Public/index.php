@@ -14,4 +14,10 @@ $autoloader->register();
 
 $request = new \Vendor\Library\Request();
 
+$config = new \Vendor\Library\Configuration();
+
+$bootstrap = new \Vendor\Library\Bootstrap($config);
+$bootstrap->createRoutes();
+
+var_dump($config->getRoutes());
 

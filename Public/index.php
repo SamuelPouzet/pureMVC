@@ -19,5 +19,8 @@ $config = new \Vendor\Library\Configuration();
 $bootstrap = new \Vendor\Library\Bootstrap($config);
 $bootstrap->createRoutes();
 
-var_dump($config->getRoutes());
+$router = new \Vendor\Library\Router($config, $request);
+$router->route();
+
+var_dump($request->getCurrentRoute());
 

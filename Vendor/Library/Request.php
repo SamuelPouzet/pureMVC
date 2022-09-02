@@ -13,43 +13,22 @@ class Request
      */
     protected $uri;
 
-    /**
-     * @var string
-     */
-    protected $module;
 
     /**
-     * @var string
+     * @var Route
      */
-    protected $controller;
-
-    /**
-     * @var string
-     */
-    protected $method;
-
-    /**
-     * @todo créer une classe pour les gets et les posts
-     * @var array
-     */
-    protected $gets;
-
-    /**
-     * @todo créer une classe pour les gets et les posts
-     * @var array
-     */
-    protected $posts;
-
-    /**
-     * @todo créer une classe pour les sessions
-     * @var array
-     */
-    protected $session;
+    protected $currentRoute;
 
     /**
      * @var array
      */
     protected $params;
+
+    public function __construct()
+    {
+        $this->setUri($_SERVER['REQUEST_URI']);
+        $this->setCurrentRoute(new Route());
+    }
 
     /**
      * @return string
@@ -68,99 +47,21 @@ class Request
     }
 
     /**
-     * @return string
+     * @return Route
      */
-    public function getModule(): string
+    public function getCurrentRoute(): Route
     {
-        return $this->module;
+        return $this->currentRoute;
     }
 
     /**
-     * @param string $module
+     * @param Route $currentRoute
+     * @return Request
      */
-    public function setModule(string $module): void
+    public function setCurrentRoute(Route $currentRoute): Request
     {
-        $this->module = $module;
-    }
-
-    /**
-     * @return string
-     */
-    public function getController(): string
-    {
-        return $this->controller;
-    }
-
-    /**
-     * @param string $controller
-     */
-    public function setController(string $controller): void
-    {
-        $this->controller = $controller;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMethod(): string
-    {
-        return $this->method;
-    }
-
-    /**
-     * @param string $method
-     */
-    public function setMethod(string $method): void
-    {
-        $this->method = $method;
-    }
-
-    /**
-     * @return array
-     */
-    public function getGets(): array
-    {
-        return $this->gets;
-    }
-
-    /**
-     * @param array $gets
-     */
-    public function setGets(array $gets): void
-    {
-        $this->gets = $gets;
-    }
-
-    /**
-     * @return array
-     */
-    public function getPosts(): array
-    {
-        return $this->posts;
-    }
-
-    /**
-     * @param array $posts
-     */
-    public function setPosts(array $posts): void
-    {
-        $this->posts = $posts;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSession(): array
-    {
-        return $this->session;
-    }
-
-    /**
-     * @param array $session
-     */
-    public function setSession(array $session): void
-    {
-        $this->session = $session;
+        $this->currentRoute = $currentRoute;
+        return $this;
     }
 
     /**
@@ -173,10 +74,13 @@ class Request
 
     /**
      * @param array $params
+     * @return Request
      */
-    public function setParams(array $params): void
+    public function setParams(array $params): Request
     {
         $this->params = $params;
+        return $this;
     }
+
 
 }

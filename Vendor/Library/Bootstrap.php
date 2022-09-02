@@ -20,7 +20,6 @@ class Bootstrap
         $modules = $this->scanDir(SRC_PATH);
         $routes = [];
         foreach ($modules as $module) {
-            var_dump($module);
             $confName = sprintf('%1$s%2$sConfig%2$sConfig', $module, DS);
             try {
                 $config = new $confName();

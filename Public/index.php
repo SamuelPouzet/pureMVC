@@ -13,14 +13,16 @@ $autoloader = new \Vendor\autoloader();
 $autoloader->register();
 
 $request = new \Vendor\Library\Request();
+$response = new \Vendor\Library\Response();
 
 $config = new \Vendor\Library\Configuration();
 
 $bootstrap = new \Vendor\Library\Bootstrap($config);
 $bootstrap->createRoutes();
 
-$router = new \Vendor\Library\Router($config, $request);
+$router = new \Vendor\Library\Router($config, $request, $response);
 $router->route();
 
-var_dump($request->getCurrentRoute());
+$dispatcher = new \Vendor\Library\Dispatcher($config, $request, $response);
+$dispatcher->dispatch();
 

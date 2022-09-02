@@ -8,10 +8,13 @@ class Router
 
     protected $request;
 
-    public function __construct(Configuration $configuration, Request $request)
+    protected $response;
+
+    public function __construct(Configuration $configuration, Request $request, Response $response)
     {
         $this->configuration = $configuration;
         $this->request = $request;
+        $this->response = $response;
     }
 
     public function route()

@@ -54,11 +54,20 @@ class Dispatcher
         $controller->setConfiguration($this->configuration);
         $controller->setRequest($this->request);
         $controller->setResponse($this->response);
+        //$controller->init();
 
-        $controller->$actionName();
+        switch($this->response->getStrategy()){
+            default:
+                //HTML or other
+                $view = new View($this->configuration, $this->request, $this->response, $controller->$actionName() );
+                $layout = new Layout($this->configuration, $this->request, $this->response, $controller->$actionName() );
+                $this->response->setView($view);
+                $this->response->setLayout($layout);
+        }
+
+
 
         //@todo injection de dépendance
-        $controller->render();
 
     }
 

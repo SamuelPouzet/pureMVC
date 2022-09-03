@@ -65,12 +65,4 @@ abstract class AbstractController
         return $this;
     }
 
-    public function render()
-    {
-        if($this->response->getStatusCode() == 200){
-
-        }
-    }
-
-
 }

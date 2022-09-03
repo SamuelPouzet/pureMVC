@@ -13,6 +13,11 @@ class Request
      */
     protected $uri;
 
+    /**
+     * @var string
+     */
+    protected $module;
+
 
     /**
      * @var Route
@@ -82,5 +87,21 @@ class Request
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getModule(): string
+    {
+        return $this->module;
+    }
 
+    /**
+     * @param string $module
+     * @return Request
+     */
+    public function setModule(string $module): Request
+    {
+        $this->module = $module;
+        return $this;
+    }
 }

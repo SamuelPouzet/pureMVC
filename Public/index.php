@@ -26,3 +26,6 @@ $router->route();
 $dispatcher = new \Vendor\Library\Dispatcher($config, $request, $response);
 $dispatcher->dispatch();
 
+$viewRenderer = new \Vendor\Library\ViewRenderer($config, $request, $response);
+$viewRenderer->render();
+

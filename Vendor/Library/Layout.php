@@ -2,7 +2,7 @@
 
 namespace Vendor\Library;
 
-class View
+class Layout
 {
 
     protected Configuration $configuration;
@@ -38,18 +38,16 @@ class View
     {
         //@todo create config for default
         $module = ucfirst(strtolower($this->request->getModule()));
-        $shortname = strtolower($this->request->getCurrentRoute()->getControllerShortName());
-        $action = $this->request->getCurrentRoute()->getAction();
-        $this->path = SRC_PATH . DS . $module . DS .  'Views' . DS . $module . DS . $shortname . DS . $action . '.phtml';
+        $this->path = SRC_PATH . DS . $module . DS .  'Views' . DS . 'Layout' . DS . 'layout.phtml';
     }
 
-    public function render()
+    public function render(string $content)
     {
         if(! $this->path){
             //chemin non défini manuellement, on prend celui par défaut
             $this->setDefaultPath();
         }
-
+        $this->data['content'] = $content;
         return $this->renderer->render($this->path, $this->data);
     }
 

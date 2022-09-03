@@ -28,6 +28,7 @@ class Router
                     ->setController($route['controller'])
                     ->setAction($route['action'])
                 ;
+                $this->request->setModule($route['module']);
                 $this->explodeRoute($route['path'], $requestedUri);
                 break;
             }

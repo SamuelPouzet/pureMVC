@@ -183,4 +183,10 @@ class Route
         return $this;
     }
 
+    public function getControllerShortName()
+    {
+        $classParts = explode('\\',  $this->controller);
+        $firstPart = str_replace('Controller', '', array_pop($classParts));
+        return strtolower($firstPart);
+    }
 }

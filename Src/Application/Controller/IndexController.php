@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Vendor\Library\AbstractController;
+use Vendor\Library\View;
 
 class IndexController extends AbstractController
 {
@@ -14,7 +15,7 @@ print('indexAction');
 
     public function afficherAction()
     {
-print('afficherAction');
+        return ['test'=>1];
     }
 
 }

@@ -16,9 +16,14 @@ class Response
     protected string $responseMessage;
 
     /**
-     * @var string
+     * @var View
      */
-    protected string $body;
+    protected View $view;
+
+    /**
+     * @var Layout
+     */
+    protected ?Layout $layout=null;
 
     /**
      * @var string
@@ -67,20 +72,20 @@ class Response
     }
 
     /**
-     * @return string
+     * @return View
      */
-    public function getBody(): string
+    public function getView(): View
     {
-        return $this->body;
+        return $this->view;
     }
 
     /**
-     * @param string $body
+     * @param View $view
      * @return Response
      */
-    public function setBody(string $body): Response
+    public function setView(View $view): Response
     {
-        $this->body = $body;
+        $this->view = $view;
         return $this;
     }
 
@@ -99,6 +104,24 @@ class Response
     public function setStrategy(string $strategy): Response
     {
         $this->strategy = $strategy;
+        return $this;
+    }
+
+    /**
+     * @return Layout|null
+     */
+    public function getLayout(): ?Layout
+    {
+        return $this->layout;
+    }
+
+    /**
+     * @param Layout $layout
+     * @return Response
+     */
+    public function setLayout(Layout $layout): Response
+    {
+        $this->layout = $layout;
         return $this;
     }
 

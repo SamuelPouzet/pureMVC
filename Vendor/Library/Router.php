@@ -45,6 +45,10 @@ class Router
         $path = trim($route['path'], '/');
         $requestedUri = trim($requestedUri, '/');
 
+        if($path == $requestedUri){
+            return true;
+        }
+
         //@todo, gérer les paramètres optionnels regex, certainement
         $pattern = explode('/', $path);
         $uriParts = explode('/', $requestedUri);
@@ -68,6 +72,9 @@ class Router
         $uriParts = explode('/', $requestedUri);
         for ($i = 0; $i < count($pattern); $i++) {
             $string = $pattern[$i];
+            if (strlen($string) == 0){
+                continue;
+            }
             if($string[0] != ':'){
                 continue;
             }

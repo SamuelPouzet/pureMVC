@@ -10,7 +10,7 @@ class IndexController extends AbstractController
 
     public function indexAction()
     {
-print('indexAction');
+        return ['test'=>1];
     }
 
     public function afficherAction()

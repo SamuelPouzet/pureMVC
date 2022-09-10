@@ -4,15 +4,15 @@ namespace Vendor\Library;
 
 class Router
 {
-    protected $configuration;
+    protected $container;
 
     protected $request;
 
     protected $response;
 
-    public function __construct(Configuration $configuration, Request $request, Response $response)
+    public function __construct(Container $container, Request $request, Response $response)
     {
-        $this->configuration = $configuration;
+        $this->container = $container;
         $this->request = $request;
         $this->response = $response;
     }
@@ -20,16 +20,17 @@ class Router
     public function route()
     {
         $requestedUri = $this->request->getUri();
-        foreach ($this->configuration->getRoutes() as $key=>$route) {
+        foreach ($this->container->getConfiguration()->getConfig('routes') as $key=>$route) {
             if ($this->routeMatch($route, $requestedUri)) {
+
+                $module = explode('\\', $route['controller']);
                 $this->request->getCurrentRoute()
                     ->setRouteName($key)
                     ->setRoutePath($route['path'])
                     ->setController($route['controller'])
                     ->setAction($route['action'])
+                    ->setModule(array_shift($module));
                 ;
-                $this->request->setModule($route['module']);
-                $this->explodeRoute($route['path'], $requestedUri);
                 break;
             }
         }

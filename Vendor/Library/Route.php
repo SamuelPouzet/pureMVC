@@ -7,37 +7,42 @@ class Route
     /**
      * @var string
      */
-    protected $routeName;
+    protected string $routeName;
 
     /**
      * @var string
      */
-    protected $controller;
+    protected string $controller;
 
     /**
      * @var string
      */
-    protected $routePath;
+    protected string $routePath;
 
     /**
      * @var string
      */
-    protected $action;
+    protected string $action;
 
     /**
      * @var string
      */
-    protected $method;
+    protected string $module;
+
+    /**
+     * @var string
+     */
+    protected string $method;
 
     /**
      * @var array
      */
-    protected $gets = [];
+    protected array $gets = [];
 
     /**
      * @var array
      */
-    protected $posts = [];
+    protected array $posts = [];
 
 
     public function __construct()
@@ -183,10 +188,33 @@ class Route
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getControllerShortName()
     {
         $classParts = explode('\\',  $this->controller);
         $firstPart = str_replace('Controller', '', array_pop($classParts));
         return strtolower($firstPart);
     }
+
+    /**
+     * @return string
+     */
+    public function getModule(): string
+    {
+        return $this->module;
+    }
+
+    /**
+     * @param string $module
+     * @return Route
+     */
+    public function setModule(string $module): Route
+    {
+        $this->module = $module;
+        return $this;
+    }
+
+
 }

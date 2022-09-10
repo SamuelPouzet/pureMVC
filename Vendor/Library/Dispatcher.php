@@ -5,15 +5,15 @@ namespace Vendor\Library;
 class Dispatcher
 {
 
-    protected Configuration $configuration;
+    protected Container $container;
 
     protected Request $request;
 
     protected Response $response;
 
-    public function __construct(Configuration $configuration, Request $request, Response $response)
+    public function __construct(Container $container, Request $request, Response $response)
     {
-        $this->configuration = $configuration;
+        $this->container = $container;
         $this->request = $request;
         $this->response = $response;
     }
@@ -23,8 +23,9 @@ class Dispatcher
     {
         $route = $this->request->getCurrentRoute();
         $controllerName = $route->getController();
+
         try {
-            $controller = new $controllerName();
+            $controller = $this->container->get($controllerName);
         }catch(\Exception $e) {
             $this->response
                 ->setStatusCode(404)
@@ -51,23 +52,7 @@ class Dispatcher
             return;
         }
 
-        $controller->setConfiguration($this->configuration);
-        $controller->setRequest($this->request);
-        $controller->setResponse($this->response);
-        //$controller->init();
-
-        switch($this->response->getStrategy()){
-            default:
-                //HTML or other
-                $view = new View($this->configuration, $this->request, $this->response, $controller->$actionName() );
-                $layout = new Layout($this->configuration, $this->request, $this->response, $controller->$actionName() );
-                $this->response->setView($view);
-                $this->response->setLayout($layout);
-        }
-
-
-
-        //@todo injection de dépendance
+        return $controller->$actionName();
 
     }
 

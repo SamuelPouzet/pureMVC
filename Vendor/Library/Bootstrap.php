@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Vendor\Library;
 
@@ -12,51 +13,21 @@ class Bootstrap
     use FileTrait;
 
     /**
-     * @var Configuration
+     * @var Container
      */
-    protected Configuration $configuration;
+    protected Container $container;
 
     /**
-     * @param Configuration $configuration
      */
-    public function __construct(Configuration $configuration)
+    public function __construct()
     {
-        $this->configuration = $configuration;
+        $this->container = new Container();
     }
 
-    /**
-     * @return void
-     * @throws \Exception
-     */
-    public function createRoutes()
+    public function getContainer(): Container
     {
-        $modules = $this->scanDir(SRC_PATH);
-        $routes = [];
-        foreach ($modules as $module) {
-            $confName = sprintf('%1$s%2$sConfig%2$sConfig', $module, DS);
-            try {
-                $config = new $confName();
-                $moduleroutes = $config->getRoutes();
-                $this->addModule($moduleroutes, $module);
-                $routes = array_merge($routes, $moduleroutes);
-            } catch (\Exception $e) {
-                throw new \Exception('Config not found for module');
-            }
-        }
-        $this->configuration->setRoutes($routes);
+        return $this->container;
     }
 
-    /**
-     * @param array $routes
-     * @param string $module
-     * @return void
-     */
-    protected function addModule(array &$routes, string $module): void
-    {
-        foreach ($routes as &$route)
-        {
-            $route['module']=$module;
-        }
-    }
 
 }

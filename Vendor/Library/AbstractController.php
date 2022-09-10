@@ -5,29 +5,9 @@ namespace Vendor\Library;
 abstract class AbstractController
 {
 
-    protected Configuration $configuration;
-
     protected Request $request;
 
     protected Response $response;
-
-    /**
-     * @return Configuration
-     */
-    public function getConfiguration(): Configuration
-    {
-        return $this->configuration;
-    }
-
-    /**
-     * @param Configuration $configuration
-     * @return AbstractController
-     */
-    public function setConfiguration(Configuration $configuration): AbstractController
-    {
-        $this->configuration = $configuration;
-        return $this;
-    }
 
     /**
      * @return Request

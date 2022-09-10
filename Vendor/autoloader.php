@@ -47,7 +47,7 @@ class autoloader
             return;
         }
 
-        throw new \Exception(sprintf('la classe : %1$s n\'a pas pu être trouvée', $className));
+        throw new \Exception(sprintf('la classe : %1$s n\'a pas pu être trouvée', ROOT_PATH . DS . $file));
     }
 
     /**

@@ -4,38 +4,33 @@ namespace Vendor\Library;
 
 class ViewRenderer
 {
-
-    protected View $view;
-
-    protected ?Layout $layout;
-
-    protected Configuration $configuration;
-
-    protected Request $request;
-
+    protected Container $container;
+    protected  Request $request;
     protected Response $response;
+    protected  AbstractView $view;
 
-    public function __construct(Configuration $configuration, Request $request, Response $response)
+    /**
+     * @param Container $container
+     * @param Request $request
+     * @param Response $response
+     */
+    public function __construct(Container $container, Request $request, Response $response, AbstractView $view)
     {
-        $this->configuration = $configuration;
+        $this->container = $container;
         $this->request = $request;
         $this->response = $response;
-        $this->view = $response->getView();
-        $this->layout = $response->getLayout();
+        $view->setRequest($this->request);
+        $view->setContainer($this->container);
+        $this->view = $view;
     }
 
-    public function render() :void
+    public function render()
     {
-        if (! $this->layout){
-            $this->createLayout();
+        $this->response->setBody($this->view->render());
+        if( $this->view->hasLayout() ){
+            $layout = new \Vendor\Library\Layout($this->container, $this->request, $this->response);
+            $this->response->setBody($layout->render($this->response->getBody()));
         }
-        echo $this->layout->render($this->view->render());
-    }
-
-    protected function createLayout(): void
-    {
-        $this->layout = new Layout($this->configuration, $this->request, $this->response, []);
-        $this->response->setLayout( $this->layout );
     }
 
 }

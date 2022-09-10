@@ -5,7 +5,7 @@ namespace Vendor\Library;
 class Layout
 {
 
-    protected Configuration $configuration;
+    protected Container $container;
 
     protected Request $request;
 
@@ -13,42 +13,56 @@ class Layout
 
     protected array $data;
 
-    protected Renderer $renderer;
-
-    protected ?string $path = null;
-
-    public function __construct(Configuration $configuration, Request $request, Response $response, array $data)
+    /**
+     * @param Container $container
+     * @param Request $request
+     * @param Response $response
+     * @param array $data
+     */
+    public function __construct(Container $container, Request $request, Response $response, array $data=[])
     {
-        $this->configuration = $configuration;
+        $this->container = $container;
         $this->request = $request;
         $this->response = $response;
         $this->data = $data;
-        $this->renderer = new Renderer();
     }
 
-    public function setPath($path)
+
+    protected function getPath(): string
     {
-        if(!is_file($path)){
-            throw new \Exception('file not found');
+        $viewConfig = $this->container->getConfiguration()->getConfig('views_renderers');
+        $module = $this->request->getCurrentRoute()->getModule();
+        $controller = $this->request->getCurrentRoute()->getControllerShortName();
+        $action = $this->request->getCurrentRoute()->getAction();
+
+        if(isset($viewConfig['layout_templates'][$module])){
+            $path = $viewConfig['layout_templates'][$module];
+            if(is_file($path)){
+                return $path;
+            }
+            throw new \Exception('Template file not found for configuration1');
         }
-        $this->path = $path;
-    }
 
-    protected function setDefaultPath()
-    {
-        //@todo create config for default
-        $module = ucfirst(strtolower($this->request->getModule()));
-        $this->path = SRC_PATH . DS . $module . DS .  'Views' . DS . 'Layout' . DS . 'layout.phtml';
-    }
-
-    public function render(string $content)
-    {
-        if(! $this->path){
-            //chemin non défini manuellement, on prend celui par défaut
-            $this->setDefaultPath();
+        if(isset($viewConfig['layout_templates']['*'])){
+            $path = $viewConfig['layout_templates']['*'];
+            if(is_file($path)){
+                return $path;
+            }
+            throw new \Exception('Template file not found for configuration2');
         }
-        $this->data['content'] = $content;
-        return $this->renderer->render($this->path, $this->data);
+        throw new \Exception('no template found for configuration3');
+    }
+
+    public function render(string $html)
+    {
+        $path = $this->getPath();
+        ob_start();
+        foreach($this->data as $key=>$data){
+            $this->$key = $data;
+        }
+        $this->content = $html;
+        require $path;
+        return ob_get_clean();
     }
 
 }

@@ -1,27 +1,34 @@
 <?php
-
-namespace Application\Config;
+declare(strict_types=1);
 
 use Application\Controller\IndexController;
-use Vendor\Library\Interfaces\ConfigInterface;
+use Application\Controller\Factory\IndexControllerFactory;
 
-class Config implements ConfigInterface
-{
-
-    public function getRoutes()
-    {
-        return [
-            'index'=>[
-                'path'=>'/',
-                'controller'=>IndexController::class,
-                'action'=>'index',
-            ],
-            'application'=>[
-                'path'=>'/index/:action/:id/:value',
-                'controller'=>IndexController::class,
-                'action'=>'index',
-            ],
-        ];
-    }
-
-}
+return [
+    'routes'=>[
+        'index'=>[
+            'path'=>'/',
+            'controller'=>IndexController::class,
+            'action'=>'index',
+        ],
+        'application'=>[
+            'path'=>'/index/:action/:id/:value',
+            'controller'=>IndexController::class,
+            'action'=>'index',
+        ],
+    ],
+    'controllers'=>[
+        IndexController::class=>indexControllerFactory::class,
+    ],
+    'views_renderers'=>[
+        'view_templates'=>[
+            __DIR__ . DS . '..' . DS . 'Views',
+            __DIR__ . DS . '..' . DS . 'View',
+        ],
+        // key * for all site, modulename for one module
+        'layout_templates'=>[
+            '*'           => __DIR__ . DS . '..' . DS . 'Views' . DS . 'Layout' . DS . 'layout.phtml',
+            'Application' => __DIR__ . DS . '..' . DS . 'Views' .DS . 'Layout' . DS . 'layout.phtml',
+        ]
+    ],
+];

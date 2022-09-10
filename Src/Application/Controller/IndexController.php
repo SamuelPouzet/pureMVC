@@ -3,14 +3,23 @@
 namespace Application\Controller;
 
 use Vendor\Library\AbstractController;
-use Vendor\Library\View;
+use Vendor\Library\AbstractView;
+use Vendor\Library\ViewStrategy\View;
+use Vendor\Library\ViewStrategy\ViewJson;
 
 class IndexController extends AbstractController
 {
 
-    public function indexAction()
+    public function __construct(array $test)
     {
-        return ['test'=>1];
+        $this->test = $test;
+    }
+
+    public function indexAction(): AbstractView
+    {
+        $view = new View($this->test);
+
+        return $view;
     }
 
     public function afficherAction()

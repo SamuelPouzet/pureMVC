@@ -13,21 +13,11 @@ class Request
      */
     protected $uri;
 
-    /**
-     * @var string
-     */
-    protected $module;
-
 
     /**
      * @var Route
      */
     protected $currentRoute;
-
-    /**
-     * @var array
-     */
-    protected $params;
 
     public function __construct()
     {
@@ -66,42 +56,6 @@ class Request
     public function setCurrentRoute(Route $currentRoute): Request
     {
         $this->currentRoute = $currentRoute;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getParams(): array
-    {
-        return $this->params;
-    }
-
-    /**
-     * @param array $params
-     * @return Request
-     */
-    public function setParams(array $params): Request
-    {
-        $this->params = $params;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getModule(): string
-    {
-        return $this->module;
-    }
-
-    /**
-     * @param string $module
-     * @return Request
-     */
-    public function setModule(string $module): Request
-    {
-        $this->module = $module;
         return $this;
     }
 }

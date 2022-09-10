@@ -1,7 +1,7 @@
 <?php
 
 const DS = DIRECTORY_SEPARATOR;
-define('PUBLIC_PATH', dirname(__FILE__));
+const PUBLIC_PATH = __DIR__;
 define('ROOT_PATH', dirname( PUBLIC_PATH ));
 const VENDOR_PATH = ROOT_PATH . DS . 'Vendor';
 const LIBRARY_PATH = VENDOR_PATH . DS . 'Library';
@@ -15,17 +15,17 @@ $autoloader->register();
 $request = new \Vendor\Library\Request();
 $response = new \Vendor\Library\Response();
 
-$config = new \Vendor\Library\Configuration();
 
-$bootstrap = new \Vendor\Library\Bootstrap($config);
-$bootstrap->createRoutes();
+$bootstrap = new \Vendor\Library\Bootstrap();
+$container = $bootstrap->getContainer();
 
-$router = new \Vendor\Library\Router($config, $request, $response);
+$router = new \Vendor\Library\Router($container, $request, $response);
 $router->route();
 
-$dispatcher = new \Vendor\Library\Dispatcher($config, $request, $response);
-$dispatcher->dispatch();
+$dispatcher = new \Vendor\Library\Dispatcher($container, $request, $response);
+$view = $dispatcher->dispatch();
 
-$viewRenderer = new \Vendor\Library\ViewRenderer($config, $request, $response);
-$viewRenderer->render();
+$renderer = new \Vendor\Library\ViewRenderer($container, $request, $response, $view);
+$renderer->render();
 
+echo $response->getBody();

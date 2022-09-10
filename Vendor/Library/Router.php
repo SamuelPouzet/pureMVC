@@ -19,28 +19,45 @@ class Router
 
     public function route()
     {
+        $routes = $this->container->getConfiguration()->getConfig('routes');
         $requestedUri = $this->request->getUri();
-        foreach ($this->container->getConfiguration()->getConfig('routes') as $key=>$route) {
-            if ($this->routeMatch($route, $requestedUri)) {
+        if($requestedUri == '/'){
+            $this->createRoute('index', $routes['index']);
+            return;
+        }
 
-                $module = explode('\\', $route['controller']);
-                $this->request->getCurrentRoute()
-                    ->setRouteName($key)
-                    ->setRoutePath($route['path'])
-                    ->setController($route['controller'])
-                    ->setAction($route['action'])
-                    ->setModule(array_shift($module));
-                ;
-                break;
+        foreach ( $routes as $key=>$route) {
+            if($route['path'] == '/'){
+                continue;
+            }
+            if ($this->routeMatch($route, $requestedUri)) {
+                $this->createRoute($key, $route);
+                //@todo faire mieux en utilisant la requete
+                $this->explodeRoute($route['path'], $requestedUri );
+                return;
             }
         }
 
+        throw new \Exception('404');
+
+    }
+
+    protected function createRoute(string $routename, array $route): void
+    {
+        $module = explode('\\', $route['controller']);
+        $this->request->getCurrentRoute()
+            ->setRouteName($routename)
+            ->setRoutePath($route['path'])
+            ->setController($route['controller'])
+            ->setAction($route['action'])
+            ->setModule(array_shift($module));
+        ;
     }
 
     protected function routeMatch(array $route, string $requestedUri): bool
     {
         if (!isset($route['path'])) {
-            //@todo réfléchir si on claque une exception à ce moment là
+            //la route n'est pas définie, on ne la teste pas
             return false;
         }
         $path = trim($route['path'], '/');
@@ -53,11 +70,12 @@ class Router
         //@todo, gérer les paramètres optionnels regex, certainement
         $pattern = explode('/', $path);
         $uriParts = explode('/', $requestedUri);
-        if(count($uriParts) !== count($pattern)){
-            return false;
-        }
+
         for ($i = 0; $i < count($pattern); $i++) {
             $string = $pattern[$i];
+            if($string === ''){
+                throw new \Exception('pattern cannot be empty');
+            }
             if ($string[0] != ':' && $uriParts[$i] != $string) {
                 return false;
             }

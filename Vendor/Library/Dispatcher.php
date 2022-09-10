@@ -24,33 +24,19 @@ class Dispatcher
         $route = $this->request->getCurrentRoute();
         $controllerName = $route->getController();
 
-        try {
-            $controller = $this->container->get($controllerName);
-        }catch(\Exception $e) {
-            $this->response
-                ->setStatusCode(404)
-                ->setResponseMessage(sprintf('Controller not found for route %s', $route->getRouteName() ))
-                ;
-            return;
-        }
+
+        $controller = $this->container->get($controllerName);
 
         if(! $controller instanceof AbstractController){
             $this->response
                 ->setStatusCode(500)
                 ->setResponseMessage(sprintf('Controller must extend %s', AbstractController::class ))
             ;
-            return;
+            //return;
         }
 
         $actionName = strtolower($route->getAction()) . 'Action';
 
-        if(! method_exists($controller, $actionName)){
-            $this->response
-                ->setStatusCode(404)
-                ->setResponseMessage(sprintf('Action not found for action %s', $actionName ))
-            ;
-            return;
-        }
 
         return $controller->$actionName();
 

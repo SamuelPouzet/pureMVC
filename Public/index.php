@@ -2,7 +2,7 @@
 
 const DS = DIRECTORY_SEPARATOR;
 const PUBLIC_PATH = __DIR__;
-define('ROOT_PATH', dirname( PUBLIC_PATH ));
+define('ROOT_PATH', dirname(PUBLIC_PATH));
 const VENDOR_PATH = ROOT_PATH . DS . 'Vendor';
 const LIBRARY_PATH = VENDOR_PATH . DS . 'Library';
 const SRC_PATH = ROOT_PATH . DS . 'Src';
@@ -15,17 +15,24 @@ $autoloader->register();
 $request = new \Vendor\Library\Request();
 $response = new \Vendor\Library\Response();
 
+try {
+    $bootstrap = new \Vendor\Library\Bootstrap();
+    $container = $bootstrap->getContainer();
 
-$bootstrap = new \Vendor\Library\Bootstrap();
-$container = $bootstrap->getContainer();
+    $router = new \Vendor\Library\Router($container, $request, $response);
+    $router->route();
 
-$router = new \Vendor\Library\Router($container, $request, $response);
-$router->route();
+    $dispatcher = new \Vendor\Library\Dispatcher($container, $request, $response);
+    $view = $dispatcher->dispatch();
 
-$dispatcher = new \Vendor\Library\Dispatcher($container, $request, $response);
-$view = $dispatcher->dispatch();
+    $renderer = new \Vendor\Library\ViewRenderer($container, $request, $response, $view);
+    $renderer->render();
 
-$renderer = new \Vendor\Library\ViewRenderer($container, $request, $response, $view);
-$renderer->render();
+    echo $response->getBody();
+} catch (Exception $e) {
+    die($e->getMessage());
+} catch(Error $e){
+    die($e->getMessage());
+}
 
-echo $response->getBody();
+

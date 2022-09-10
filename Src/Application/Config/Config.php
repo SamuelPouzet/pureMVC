@@ -29,6 +29,7 @@ return [
         'layout_templates'=>[
             '*'           => __DIR__ . DS . '..' . DS . 'Views' . DS . 'Layout' . DS . 'layout.phtml',
             'Application' => __DIR__ . DS . '..' . DS . 'Views' .DS . 'Layout' . DS . 'layout.phtml',
-        ]
+            'Test' => __DIR__ . DS . '..' . DS . 'Views' .DS . 'Layout' . DS . 'layout_test.phtml',
+        ],
     ],
 ];

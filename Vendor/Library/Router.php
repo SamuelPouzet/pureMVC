@@ -2,6 +2,8 @@
 
 namespace Vendor\Library;
 
+use Vendor\Library\ResponseStrategy\RedirectResponse;
+
 class Router
 {
     protected $container;
@@ -38,7 +40,8 @@ class Router
             }
         }
 
-        throw new \Exception('404');
+        $error = new RedirectResponse();
+        $error->toRoute('404');
 
     }
 

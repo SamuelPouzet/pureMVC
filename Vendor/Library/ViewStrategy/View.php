@@ -18,9 +18,10 @@ class View extends AbstractView implements ViewInterface
     protected function getPath(): string
     {
         $viewConfig = $this->container->getConfiguration()->getConfig('views_renderers');
-        $module = $this->request->getCurrentRoute()->getModule();
-        $controller = $this->request->getCurrentRoute()->getControllerShortName();
-        $action = $this->request->getCurrentRoute()->getAction();
+        $module = $this->formatPathElement($this->request->getCurrentRoute()->getModule() );
+        $controller = $this->formatPathElement($this->request->getCurrentRoute()->getControllerShortName());
+
+        $action = $this->formatPathElement($this->request->getCurrentRoute()->getAction());
         foreach ($viewConfig['view_templates'] as $key=>$template){
             $path = $template . DS . $module . DS .$controller . DS . $action . '.phtml';
             if(is_file($path)){
@@ -28,6 +29,11 @@ class View extends AbstractView implements ViewInterface
             }
         }
         throw new \Exception('resolver could not resolve to a template');
+    }
+
+    protected function formatPathElement($element)
+    {
+        return ucfirst(strtolower(trim(preg_replace('/([A-Z])/', '-$1', $element), '-' )));
     }
 
     public function render()

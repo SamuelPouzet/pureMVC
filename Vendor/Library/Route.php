@@ -195,7 +195,7 @@ class Route
     {
         $classParts = explode('\\',  $this->controller);
         $firstPart = str_replace('Controller', '', array_pop($classParts));
-        return strtolower($firstPart);
+        return $firstPart;
     }
 
     /**

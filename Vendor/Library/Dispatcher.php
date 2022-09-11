@@ -34,7 +34,7 @@ class Dispatcher
             ;
             //return;
         }
-
+        $controller::setContainer($this->container);
         $actionName = strtolower($route->getAction()) . 'Action';
 
 

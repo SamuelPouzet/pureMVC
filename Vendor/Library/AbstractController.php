@@ -9,6 +9,8 @@ abstract class AbstractController
 
     protected Response $response;
 
+    private static Container $container;
+
     /**
      * @return Request
      */
@@ -43,6 +45,28 @@ abstract class AbstractController
     {
         $this->response = $response;
         return $this;
+    }
+
+    public static function setContainer(Container $container)
+    {
+        self::$container = $container;
+    }
+
+    public function __call(string $name, array $arguments)
+    {
+        $plugins = self::$container->getConfiguration()->getConfig('controller_plugins');
+        if(!isset($plugins['alias'][$name])){
+            throw new \Exception('plugin not found');
+        }
+        $className = $plugins['alias'][$name];
+        if(!isset($plugins['factories'][$className])){
+            throw new \Exception('class not found in plugin configuration');
+        }
+        $factory = new $plugins['factories'][$className]();
+
+        $class = $factory(self::$container);
+
+        return $class();
     }
 
 }

@@ -39,8 +39,14 @@ class Configuration
     protected function init(): void
     {
         $config = [];
-        $path = $this->configDir . DS . 'Autoload';
 
+
+        //get library configuration can be overriden
+        $class = new Library();
+        $config = array_merge_recursive($config, $class->getConfig());
+
+        $path = $this->configDir . DS . 'Autoload';
+        //get general configuration
         if (!is_dir($path)) {
             throw new \Exception('/Config/Autoload directory not found');
         }
@@ -52,6 +58,7 @@ class Configuration
             }
         }
 
+        // get configuration needed by each module
         foreach ($this->moduleDir as $module) {
             $className = sprintf('%1$s\Module', ucfirst(strtolower($module)));
             $class = new $className();

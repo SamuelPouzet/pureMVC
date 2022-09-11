@@ -19,6 +19,8 @@ class IndexController extends AbstractController
     {
         $view = new View($this->test);
 
+        var_dump($this->redirect()->toUrl('https://www.bluehost.com/help/article/php-redirect'));
+
         return $view;
     }
 

@@ -6,6 +6,8 @@ use Vendor\Library\Controllers\Factory\NotFoundControllerFactory;
 use Vendor\Library\Controllers\NotFoundController;
 use Vendor\Library\Controllers_plugins\Factories\RedirectPluginFactory;
 use Vendor\Library\Controllers_plugins\RedirectPlugin;
+use Vendor\Library\Services\Factory\NavigationServiceFactory;
+use Vendor\Library\Services\NavigationService;
 
 
 return [
@@ -18,6 +20,9 @@ return [
     ],
     'controllers'=> [
         NotFoundController::class=>NotFoundControllerFactory::class,
+    ],
+    'services'=>[
+        NavigationService::class=>NavigationServiceFactory::class,
     ],
     'controller_plugins' => [
         'factories' => [

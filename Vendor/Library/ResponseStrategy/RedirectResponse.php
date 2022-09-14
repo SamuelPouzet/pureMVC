@@ -2,6 +2,8 @@
 
 namespace Vendor\Library\ResponseStrategy;
 
+use Vendor\Library\Services\NavigationService;
+
 /**
  *
  */
@@ -9,16 +11,29 @@ class RedirectResponse
 {
 
     /**
+     * @var NavigationService
+     */
+    protected NavigationService $navigationService;
+
+    /**
+     * @param NavigationService $navigationService
+     * @todo check si on ne redirige pas sur la même url, et donc en boucle.
+     */
+    public function __construct(NavigationService $navigationService)
+    {
+        $this->navigationService = $navigationService;
+    }
+
+    /**
      * @param string $routeName
      * @param array $params
      * @param $code
      * @return void
      */
-    public function toRoute(string $routeName, array $params=[], $code=403): void
+    public function toRoute(string $routeName, array $params=[], $code=307): void
     {
-        //@todo créer un routeService
-
-
+        $url = $this->navigationService->createUrl($routeName, $params);
+        $this->toUrl($url, $code);
     }
 
     /**
@@ -26,7 +41,7 @@ class RedirectResponse
      * @param int $code
      * @return void
      */
-    public function toUrl(string $url, int $code=403): void
+    public function toUrl(string $url, int $code=307): void
     {
         header(sprintf('location: %1$s', $url), true, $code);
     }

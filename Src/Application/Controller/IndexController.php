@@ -18,7 +18,8 @@ class IndexController extends AbstractController
     public function indexAction(): AbstractView
     {
         $view = new View($this->test);
-
+        //$this->redirect()->toUrl('https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#redirection_messages');
+        //$this->redirect()->toRoute('test2');
         return $view;
     }
 

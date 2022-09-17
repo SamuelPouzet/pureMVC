@@ -12,7 +12,7 @@ return [
             'action' => 'index',
         ],
         'application' => [
-            'path' => '/index/:action/:id/:value',
+            'path' => '/index/:action/:toto',
             'controller' => IndexController::class,
             'action' => 'index',
         ],

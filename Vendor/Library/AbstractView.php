@@ -31,6 +31,23 @@ abstract class AbstractView
         return $this;
     }
 
+    public function __call(string $name, array $params)
+    {
+        $plugins = $this->container->getConfiguration()->getConfig('view_helpers');
+        if(!isset($plugins['alias'][$name])){
+            throw new \Exception('plugin not found ' . $name);
+        }
+        $className = $plugins['alias'][$name];
+        if(!isset($plugins['factories'][$className])){
+            throw new \Exception('class not found in plugin configuration');
+        }
+        $factory = new $plugins['factories'][$className]();
+
+        $class = $factory($this->container);
+
+        return $class();
+    }
+
 
     public function nolayout(): self
     {

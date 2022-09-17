@@ -25,7 +25,8 @@ class IndexController extends AbstractController
 
     public function afficherAction()
     {
-        return ['test'=>1];
+        $view = new View($this->test);
+        return $view;
     }
 
 }

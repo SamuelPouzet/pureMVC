@@ -2,6 +2,7 @@
 
 namespace Vendor\Library;
 
+use Vendor\Library\Exceptions\NotFoundException;
 use Vendor\Library\ResponseStrategy\RedirectResponse;
 use Vendor\Library\Services\NavigationService;
 
@@ -32,8 +33,7 @@ class Router
         $routeMatched = $this->findRoute($this->routes, $uriParts);
 
         if(! $routeMatched){
-            $error = new RedirectResponse( $this->container->get(NavigationService::class));
-            $error->toRoute('404');
+            throw new NotFoundException();
         }
         $route = $this->container->getConfiguration()->getConfig('routes')[$routeMatched];
         $this->createRoute($routeMatched, $route);
@@ -99,8 +99,6 @@ class Router
             }
             return $this->findRoute($route, $uriParts);
         }
-
-
         return false;
     }
 

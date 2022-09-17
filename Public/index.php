@@ -15,10 +15,10 @@ $autoloader->register();
 $request = new \Vendor\Library\Request();
 $response = new \Vendor\Library\Response();
 
-try {
-    $bootstrap = new \Vendor\Library\Bootstrap();
-    $container = $bootstrap->getContainer();
+$bootstrap = new \Vendor\Library\Bootstrap();
+$container = $bootstrap->getContainer();
 
+try {
     $router = new \Vendor\Library\Router($container, $request, $response);
     $router->route();
 
@@ -30,7 +30,14 @@ try {
 
     echo $response->getBody();
 } catch (Exception $e) {
-    die($e->getMessage());
+    $code = (string)$e->getCode();
+    if(! isset($container->getConfiguration()->getConfig()['routes'][$code]) ) {
+        $code = '500';
+    }
+
+    $navigationService = $container->get(\Vendor\Library\Services\NavigationService::class);
+    $redirect = new \Vendor\Library\ResponseStrategy\RedirectResponse($navigationService);
+    $redirect->toRoute($code);
 } catch(Error $e){
     die($e->getMessage());
 }

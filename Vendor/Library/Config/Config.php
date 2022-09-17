@@ -2,8 +2,8 @@
 
 namespace Test\Config;
 
-use Vendor\Library\Controllers\Factory\NotFoundControllerFactory;
-use Vendor\Library\Controllers\NotFoundController;
+use Vendor\Library\Controllers\ErrorController;
+use Vendor\Library\Controllers\Factory\ErrorControllerFactory;
 use Vendor\Library\Controllers_plugins\Factories\RedirectPluginFactory;
 use Vendor\Library\Controllers_plugins\RedirectPlugin;
 use Vendor\Library\Services\Factory\NavigationServiceFactory;
@@ -14,12 +14,17 @@ return [
     'routes'=> [
         '404'=>[
             'path'=>'/404',
-            'controller'=>NotFoundController::class,
+            'controller'=>ErrorController::class,
             'action'=>'error404',
+        ],
+        '500'=>[
+            'path'=>'/500',
+            'controller'=>ErrorController::class,
+            'action'=>'error500',
         ],
     ],
     'controllers'=> [
-        NotFoundController::class=>NotFoundControllerFactory::class,
+        ErrorController::class=>ErrorControllerFactory::class,
     ],
     'services'=>[
         NavigationService::class=>NavigationServiceFactory::class,

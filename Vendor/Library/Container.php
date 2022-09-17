@@ -2,10 +2,12 @@
 
 namespace Vendor\Library;
 
-class Container
+final class Container
 {
     protected array $elements = [];
-    protected Configuration $configuration;
+    private Configuration $configuration;
+
+    private const DI = ['controllers', 'services'];
 
     public function __construct()
     {
@@ -25,7 +27,7 @@ class Container
         }
 
         $config = $this->configuration->getConfig();
-        foreach (['controllers', 'services'] as $di){
+        foreach (self::DI as $di){
             if(!isset($config[$di])){
                 continue;
             }
@@ -38,7 +40,23 @@ class Container
             $this->elements[$class] = $factory($this);
             return $this->elements[$class];
         }
+    }
 
+    public function has(string $class): bool
+    {
+        if(isset($this->elements['$class'])){
+            return true;
+        }
+        $config = $this->configuration->getConfig();
+        foreach (self::DI as $di){
+            if(isset($config[$di])){
+               continue;
+            }
+            if(isset($config[$di][$class])) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

@@ -3,14 +3,15 @@
 namespace Vendor\Library\Controllers\Factory;
 
 use Vendor\Library\Container;
-use Vendor\Library\Controllers\NotFoundController;
+use Vendor\Library\Controllers\ErrorController;
 use Vendor\Library\Interfaces\FactoryInterface;
 
-class NotFoundControllerFactory implements FactoryInterface
+class ErrorControllerFactory implements FactoryInterface
 {
 
     public function __invoke(Container $container, ?string $controllerName = null)
     {
-        return new NotFoundController();
+        return new ErrorController();
     }
+
 }

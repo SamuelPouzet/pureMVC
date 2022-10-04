@@ -36,13 +36,18 @@ class View extends AbstractView implements ViewInterface
         return ucfirst(strtolower(trim(preg_replace('/([A-Z])/', '-$1', $element), '-' )));
     }
 
+    public function __get(string $name): string
+    {
+        if(isset($this->data[$name])){
+            return $this->data[$name];
+        }
+        throw new \Error(sprintf('%1$s var not found', $name));
+    }
+
     public function render()
     {
         $path = $this->getPath();
         ob_start();
-        foreach($this->data as $key=>$data){
-            $this->$key = $data;
-        }
         require $path;
         return ob_get_clean();
     }

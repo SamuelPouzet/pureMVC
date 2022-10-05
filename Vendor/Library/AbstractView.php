@@ -9,16 +9,23 @@ abstract class AbstractView
 
     protected array $data;
 
-    protected bool $hasLayout = true;
-
     protected Container $container;
 
     protected Request $request;
+
+    protected Response $response;
 
 
     public function __construct(array $data = [])
     {
         $this->data = $data;
+    }
+
+    public function init(Request $request, Response $response, Container $container)
+    {
+        $this->response = $response;
+        $this->request = $request;
+        $this->container = $container;
     }
 
     public function setPath($path): self
@@ -46,30 +53,6 @@ abstract class AbstractView
         $class = $factory($this->container);
 
         return $class();
-    }
-
-
-    public function nolayout(): self
-    {
-        $this->hasLayout = false;
-        return $this;
-    }
-
-    public function hasLayout(): bool
-    {
-        return $this->hasLayout;
-    }
-
-    public function setContainer(Container $container): self
-    {
-        $this->container = $container;
-        return $this;
-    }
-
-    public function setRequest(Request $request): self
-    {
-        $this->request = $request;
-        return $this;
     }
 
 }

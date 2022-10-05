@@ -9,8 +9,7 @@ const SRC_PATH = ROOT_PATH . DS . 'Src';
 
 require_once VENDOR_PATH . DS . 'autoloader.php';
 
-$autoloader = new \Vendor\autoloader();
-$autoloader->register();
+\Vendor\autoloader::register();
 
 $request = new \Vendor\Library\Request();
 $response = new \Vendor\Library\Response();
@@ -23,12 +22,7 @@ try {
     $router->route();
 
     $dispatcher = new \Vendor\Library\Dispatcher($container, $request, $response);
-    $view = $dispatcher->dispatch();
-
-    $renderer = new \Vendor\Library\ViewRenderer($container, $request, $response, $view);
-    $renderer->render();
-
-    echo $response->getBody();
+    $dispatcher->dispatch();
 } catch (Exception $e) {
     $code = (string)$e->getCode();
     if(! isset($container->getConfiguration()->getConfig()['routes'][$code]) ) {

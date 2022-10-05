@@ -2,35 +2,39 @@
 
 namespace Vendor\Library;
 
+use Vendor\Library\Interfaces\LayoutInterface;
+use Vendor\Library\Interfaces\ViewInterface;
+
 class ViewRenderer
 {
-    protected Container $container;
-    protected  Request $request;
+    protected Request $request;
     protected Response $response;
-    protected  AbstractView $view;
+    protected Container $container;
+    protected ViewInterface $view;
+    protected LayoutInterface $layout;
 
-    /**
-     * @param Container $container
-     * @param Request $request
-     * @param Response $response
-     */
-    public function __construct(Container $container, Request $request, Response $response, AbstractView $view)
+
+    public function __construct(ViewInterface $view, LayoutInterface $layout)
     {
-        $this->container = $container;
-        $this->request = $request;
-        $this->response = $response;
-        $view->setRequest($this->request);
-        $view->setContainer($this->container);
         $this->view = $view;
+        $this->layout = $layout;
+    }
+
+    public function init(Request $request, Response $response, Container $container)
+    {
+        $this->response = $response;
+        $this->request = $request;
+        $this->container = $container;
+        $this->view->init($request, $response, $container);
+        $this->layout->init($request, $response, $container);
     }
 
     public function render()
     {
-        $this->response->setBody($this->view->render());
-        if( $this->view->hasLayout() ){
-            $layout = new \Vendor\Library\Layout($this->container, $this->request, $this->response);
-            $this->response->setBody($layout->render($this->response->getBody()));
-        }
+        $this->view::header();
+        $this->layout->setView($this->view);
+        echo $this->layout->render();
+
     }
 
 }

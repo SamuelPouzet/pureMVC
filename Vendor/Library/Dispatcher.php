@@ -34,11 +34,11 @@ class Dispatcher
             ;
             //return;
         }
-        $controller::setContainer($this->container);
+        $controller->init($this->request, $this->response, $this->container);
         $actionName = strtolower($route->getAction()) . 'Action';
 
 
-        return $controller->$actionName();
+        $controller->run($controller->$actionName());
 
     }
 

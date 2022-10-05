@@ -7,11 +7,20 @@ use Vendor\Library\Interfaces\ViewInterface;
 
 class ViewJson extends AbstractView  implements ViewInterface
 {
+    private const JSON_STRATEGY = 'JSON';
 
-    public function render()
+    public static function getStrategy(): string
     {
-        header("Content-Type: application/json;charset=utf-8");
-        $this->hasLayout= false;
+        return self::JSON_STRATEGY;
+    }
+
+    public static function header()
+    {
+        header('Content-Type: application/json');
+    }
+
+    public function render(): string
+    {
         return json_encode($this->data);
     }
 

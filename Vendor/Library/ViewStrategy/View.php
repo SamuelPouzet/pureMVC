@@ -10,9 +10,21 @@ class View extends AbstractView implements ViewInterface
 
     use FileTrait;
 
+    protected const VIEW_STRATEGY = 'VIEW';
+
     public function __construct(array $data = [])
     {
         parent::__construct($data);
+    }
+
+    public static function getStrategy(): string
+    {
+        return self::VIEW_STRATEGY;
+    }
+
+    public static function header()
+    {
+        header('Content-Type: text/html');
     }
 
     protected function getPath(): string
@@ -36,13 +48,18 @@ class View extends AbstractView implements ViewInterface
         return ucfirst(strtolower(trim(preg_replace('/([A-Z])/', '-$1', $element), '-' )));
     }
 
-    public function render()
+    public function __get($key)
+    {
+        if(!isset($this->data[$key])){
+            throw new \Exception(sprintf('variable %1$s not found', $key));
+        }
+        return $this->data['key'];
+    }
+
+    public function render(): string
     {
         $path = $this->getPath();
         ob_start();
-        foreach($this->data as $key=>$data){
-            $this->$key = $data;
-        }
         require $path;
         return ob_get_clean();
     }
